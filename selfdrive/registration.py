@@ -9,7 +9,7 @@ from common.api import api_get
 from common.params import Params
 from common.file_helpers import mkdirs_exists_ok
 from common.basedir import PERSIST
-from selfdrive.hardware import HARDWARE
+from selfdrive.hardware import HARDWARE, PC
 from selfdrive.swaglog import cloudlog
 from selfdrive.version import version, terms_version, training_version, get_git_commit, \
                               get_git_branch, get_git_remote
@@ -51,6 +51,8 @@ def register(spinner=None):
   needs_registration = needs_registration or dongle_id is None
 
   if needs_registration:
+    if PC:
+      return "UnofficialDevice"
     if spinner is not None:
       spinner.update("registering device")
 
