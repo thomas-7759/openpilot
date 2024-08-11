@@ -32,8 +32,8 @@ const int TOYOTA_GAS_INTERCEPTOR_THRSLD = 845;
 const CanMsg TOYOTA_TX_MSGS[] = {{0x22E, 2, 5}, {0x164, 0,  8}};  // stepperservocan on bus 3 and civic cruise setting
 
 AddrCheckStruct toyota_rx_checks[] = {
-  {.msg = {{0x158, 0, 8, .check_checksum = false, .expected_timestep = 12000U}}},
-  {.msg = {{0x17C, 0, 8, .check_checksum = false, .expected_timestep = 20000U}}},
+  {.msg = {{0x158, 0, 8, .check_checksum = false, .expected_timestep = 10000U}}},
+  {.msg = {{0x17C, 0, 8, .check_checksum = false, .expected_timestep = 10000U}}},
   {.msg = {{0x1D0, 0, 8, .check_checksum = false, .expected_timestep = 30000U}}},
   {.msg = {{0x224, 0, 8, .check_checksum = false, .expected_timestep = 25000U},
            {0x309, 0, 8, .check_checksum = false, .expected_timestep = 25000U}}},
@@ -102,15 +102,11 @@ static int toyota_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
     }
 
     // sample speed
-    if (addr == 0x1D0) {
-      int speed = 0;
-      // sum 4 wheel speeds
-      for (int i=0; i<8; i+=2) {
-        int next_byte = i + 1;  // hack to deal with misra 10.8
-        speed += ((GET_BYTE(to_push, next_byte) & 0x0F) << 8) + (GET_BYTE(to_push, i)) - 0x2A;
-      }
-      vehicle_moving = ABS(speed / 4) > TOYOTA_STANDSTILL_THRSLD;
+    if (addr == 0x158) {
+      // first 2 bytes
+      vehicle_moving = GET_BYTE(to_push, 0) | GET_BYTE(to_push, 1);
     }
+
 
     // E39 cars have brake_pressed on 0x1D2, corolla and rav4 on 0x224
     if ((addr == 0x224) || (addr == 0x17C)) {
