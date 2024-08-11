@@ -25,7 +25,7 @@ if os.getenv("NOLOG") or os.getenv("NOCRASH") or PC:
 else:
   from raven import Client
   from raven.transport.http import HTTPTransport
-  from selfdrive.version import origin, branch, smiskol_remote, get_git_commit
+  from selfdrive.version import origin, branch, get_git_commit #, smiskol_remote
   from common.op_params import opParams
   import shutil
 
@@ -37,10 +37,10 @@ else:
   if error_tags['username'] is None or not isinstance(error_tags['username'], str):
     username = 'undefined'
 
-  if smiskol_remote:  # CHANGE TO YOUR remote and sentry key to receive errors if you fork this fork
-    sentry_uri = 'https://d544b36d2f81069aae01837c2fc53ef4@o4507756023906304.ingest.de.sentry.io/4507756026855504'
-  else:
-    sentry_uri = 'https://d544b36d2f81069aae01837c2fc53ef4@o4507756023906304.ingest.de.sentry.io/4507756026855504'  # stock
+  #if smiskol_remote:  # CHANGE TO YOUR remote and sentry key to receive errors if you fork this fork
+    #sentry_uri = 'https://d544b36d2f81069aae01837c2fc53ef4@o4507756023906304.ingest.de.sentry.io/4507756026855504'
+  #else:
+    #sentry_uri = 'https://d544b36d2f81069aae01837c2fc53ef4@o4507756023906304.ingest.de.sentry.io/4507756026855504'  # stock
   client = Client(sentry_uri, install_sys_hook=False, transport=HTTPTransport, release=version, tags=error_tags)
 
 
