@@ -2,7 +2,7 @@
 import os
 import requests
 import threading
-#from selfdrive.crash import client
+from selfdrive.crash import client
 from cereal import car, log
 from common.numpy_fast import clip
 from common.realtime import sec_since_boot, config_realtime_process, Priority, Ratekeeper, DT_CTRL
@@ -46,13 +46,13 @@ LaneChangeDirection = log.LateralPlan.LaneChangeDirection
 EventName = car.CarEvent.EventName
 
 
-#def log_fingerprint(candidate, timeout=15):
-#  try:
-#    requests.get('https://sentry.io', timeout=timeout)
- #   client.captureMessage("fingerprinted {}".format(candidate), level='info')
-    #return
-  #except:
-    #pass
+def log_fingerprint(candidate, timeout=15):
+  try:
+    requests.get('https://sentry.io', timeout=timeout)
+    client.captureMessage("fingerprinted {}".format(candidate), level='info')
+    return
+  except:
+    pass
 
 
 class Controls:
