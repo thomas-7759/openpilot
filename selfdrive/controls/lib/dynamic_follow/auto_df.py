@@ -1,7 +1,6 @@
 """
   Generated using Konverter: https://github.com/ShaneSmiskol/Konverter
 """
-import os
 import numpy as np
 wb = np.load('/home/thomas/openpilot/selfdrive/controls/lib/dynamic_follow/auto_df_weights.npz', allow_pickle=True)
 w, b = wb['wb']
