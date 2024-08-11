@@ -22,20 +22,8 @@ class CarState(CarStateBase):
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()
-
-    ret.doorOpen = any([cp.vl["IKE_2"]['DOOR_OPEN_FL'], cp.vl["IKE_2"]['DOOR_OPEN_FR'],
-                        cp.vl["IKE_2"]['DOOR_OPEN_RL'], cp.vl["IKE_2"]['DOOR_OPEN_RR']])
-    ret.seatbeltUnlatched = cp.vl["IKE_2"]['SEATBELT_DRIVER_UNLATCHED'] != 0
-
-    ret.brakePressed = cp.vl["PCM_CRUISE"]['BRK_ST_OP'] != 0
-    ret.brakeLights = bool(cp.vl["DME_2"]['BRAKE_LIGHT_SIGNAL'] or ret.brakePressed)
-    if self.CP.enableGasInterceptor:
-      ret.gas = (cp.vl["GAS_SENSOR"]['INTERCEPTOR_GAS'] + cp.vl["GAS_SENSOR"]['INTERCEPTOR_GAS2']) / 2.
-      ret.gasPressed = ret.gas > 15
-    else:
-      ret.gas = cp.vl["DME_2"]['GAS_PEDAL']
-      ret.gasPressed = cp.vl["DME_2"]['GAS_PEDAL'] > 0.05
-
+    ret.brakePressed = cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] != 0
+    ret.brakeLights = bool(cp.vl["POWERTRAIN_DATA"]['BRAKE_SWITCH'] or ret.brakePressed)
     ret.wheelSpeeds.fl = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_FL'] * CV.KPH_TO_MS
     ret.wheelSpeeds.fr = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_FR'] * CV.KPH_TO_MS
     ret.wheelSpeeds.rl = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_RL'] * CV.KPH_TO_MS
