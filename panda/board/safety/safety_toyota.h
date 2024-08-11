@@ -29,14 +29,14 @@ const int TOYOTA_STANDSTILL_THRSLD = 32;  // 1kph
 const int TOYOTA_GAS_INTERCEPTOR_THRSLD = 845;
 #define TOYOTA_GET_INTERCEPTOR(msg) (((GET_BYTE((msg), 0) << 8) + GET_BYTE((msg), 1) + (GET_BYTE((msg), 2) << 8) + GET_BYTE((msg), 3)) / 2) // avg between 2 tracks
 
-const CanMsg TOYOTA_TX_MSGS[] = {{0x22E, 2, 5}, {0x164, 0,  5}};  // stepperservocan on bus 3 and civic cruise setting
+const CanMsg TOYOTA_TX_MSGS[] = {{0x22E, 2, 5}, {0x164, 0,  8}};  // stepperservocan on bus 3 and civic cruise setting
 
 AddrCheckStruct toyota_rx_checks[] = {
   {.msg = {{0x158, 0, 8, .check_checksum = false, .expected_timestep = 12000U}}},
   {.msg = {{0x17C, 0, 8, .check_checksum = false, .expected_timestep = 20000U}}},
   {.msg = {{0x1D0, 0, 8, .check_checksum = false, .expected_timestep = 30000U}}},
-  {.msg = {{0x309, 0, 8, .check_checksum = false, .expected_timestep = 25000U},
-           {0x329, 0, 8, .check_checksum = false, .expected_timestep = 25000U}}},
+  {.msg = {{0x224, 0, 8, .check_checksum = false, .expected_timestep = 25000U},
+           {0x309, 0, 8, .check_checksum = false, .expected_timestep = 25000U}}},
 };
 const int TOYOTA_RX_CHECKS_LEN = sizeof(toyota_rx_checks) / sizeof(toyota_rx_checks[0]);
 
@@ -113,7 +113,7 @@ static int toyota_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
     }
 
     // E39 cars have brake_pressed on 0x1D2, corolla and rav4 on 0x224
-    if ((addr == 0x224) || (addr == 0x1D2)) {
+    if ((addr == 0x224) || (addr == 0x17C)) {
       int byte = (addr == 0x224) ? 0 : 4;
       brake_pressed = ((GET_BYTE(to_push, byte) << 7) & 0x80) != 0;
     }
