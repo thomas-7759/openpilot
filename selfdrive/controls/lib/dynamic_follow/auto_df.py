@@ -3,7 +3,8 @@
 """
 import os
 import numpy as np
-wb = np.load(os.path('/data/openpilot/selfdrive/controls/lib/dynamic_follow/auto_df_weights.npz'), allow_pickle=True)
+os.chdir('/data/openpilot/selfdrive/controls/lib/dynamic_follow')
+wb = np.load('auto_df_weights.npz', allow_pickle=True)
 w, b = wb['wb']
 
 def softmax(x):
