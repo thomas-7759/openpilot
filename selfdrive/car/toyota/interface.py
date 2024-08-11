@@ -140,10 +140,10 @@ class CarInterface(CarInterfaceBase):
       stop_and_go = True
       ret.safetyParam = 100
       ret.steerControlType = car.CarParams.SteerControlType.angle
-      ret.wheelbase = 2.830   # This is updated for BMW
-      ret.steerRatio = 17.9   # This is updated for BMW
+      ret.wheelbase = 2.7   # civic
+      ret.steerRatio = 15.38   # civic
       tire_stiffness_factor = 0.8   # hand-tune
-      ret.mass = 2000   # This is updated for BMW
+      ret.mass = 1379   # civic
       ret.longitudinalTuning.kpBP = [0., 15., 22.]
       ret.longitudinalTuning.kiBP = [0., 15., 22.]
       ret.gasMaxBP = [0., 5., 12., 25.]
@@ -153,7 +153,7 @@ class CarInterface(CarInterfaceBase):
       ret.longitudinalTuning.deadzoneBP = [0.]
       ret.longitudinalTuning.deadzoneV = [0.]
 
-      ret.enableGasInterceptor = True #OLD_CAR USES ALWAYS INTERCEPTOR MESSAGE FOR GAS
+      #ret.enableGasInterceptor = True #OLD_CAR USES ALWAYS INTERCEPTOR MESSAGE FOR GAS
 
       if ret.enableGasInterceptor:
         ret.longitudinalTuning.kpV = [0.3, 0.6, 0.7]
