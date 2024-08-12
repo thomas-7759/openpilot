@@ -63,19 +63,16 @@ class CarState(CarStateBase):
       ret.steeringAngleDeg = cp.vl["STEER_ANGLE_SENSOR"]['STEER_ANGLE'] + cp.vl["STEER_ANGLE_SENSOR"]['STEER_FRACTION']
 
     
-    if self.CP.carFingerprint == CAR.OLD_CAR: # Steering rate sensor is code differently on BMW
-      if cp.vl["SZL_1"]['VELOCITY_DIRECTION'] == 0:
-        ret.steeringRateDeg = (cp.vl["SZL_1"]['STEERING_VELOCITY'])
+    if self.CP.carFingerprint == CAR.OLD_CAR: # Steering rate sensor is code differently on CIVIC
+      if cp.vl["STEERING_EPS_DATA"]['STEER_ANGLERATE'] == 0:
+        ret.steeringRateDeg = (cp.vl["STEERING_EPS_DATA"]['STEER_ANGLERATE'])
       else:
-        ret.steeringRateDeg = -(cp.vl["SZL_1"]['STEERING_VELOCITY'])
+        ret.steeringRateDeg = -(cp.vl["STEERING_EPS_DATA"]['STEER_ANGLERATE'])
     else:
       ret.steeringRateDeg = cp.vl["STEER_ANGLE_SENSOR"]['STEER_RATE']
 
-
-    can_gear = int(cp.vl["AGS_1"]['GEAR_SELECTOR'])
-    ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(can_gear, None))
-    ret.leftBlinker = cp.vl["IKE_2"]['BLINKERS'] == 1
-    ret.rightBlinker = cp.vl["IKE_2"]['BLINKERS'] == 2
+    ret.leftBlinker = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER']
+    ret.rightBlinker = cp.vl["IKE_2"]['RIGHT_BLINKER']
 
     ret.steeringTorque = cp.vl["STEER_TORQUE_SENSOR"]['STEER_TORQUE_DRIVER']
     ret.steeringTorqueEps = cp.vl["STEERING_STATUS"]['STEERING_TORQUE']
@@ -100,7 +97,7 @@ class CarState(CarStateBase):
       ret.cruiseState.standstill = False
     else:
       ret.cruiseState.standstill = self.pcm_acc_status == 7
-    ret.cruiseState.enabled = bool(cp.vl["PCM_CRUISE"]['CRUISE_ACTIVE'])
+    ret.cruiseState.enabled = bool(cp.vl["CRUISE_STATUS"]['CRUISE_ON'])
     ret.cruiseState.nonAdaptive = cp.vl["PCM_CRUISE"]['CRUISE_STATE'] in [1, 2, 3, 4, 5, 6]
 
     if self.CP.carFingerprint == CAR.PRIUS:
@@ -109,7 +106,6 @@ class CarState(CarStateBase):
       ret.genericToggle = bool(cp.vl["LIGHT_STALK"]['AUTO_HIGH_BEAM'])
     ret.stockAeb = bool(cp_cam.vl["PRE_COLLISION"]["PRECOLLISION_ACTIVE"] and cp_cam.vl["PRE_COLLISION"]["FORCE"] < -1e-5)
 
-    ret.espDisabled = cp.vl["DSC_1"]['DSC_OFF'] != 0
     # 2 is standby, 10 is active. TODO: check that everything else is really a faulty state
     self.steer_state = cp.vl["EPS_STATUS"]['LKA_STATE']
 
