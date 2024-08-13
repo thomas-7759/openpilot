@@ -65,9 +65,9 @@ class CarState(CarStateBase):
     
     if self.CP.carFingerprint == CAR.OLD_CAR: # Steering rate sensor is code differently on CIVIC
       if cp.vl["STEERING_EPS_DATA"]['STEER_ANGLERATE'] == 0:
-        ret.steeringRateDeg = (cp.vl["STEERING_EPS_DATA"]['STEER_ANGLERATE'])
+        ret.steeringRateDeg = (cp.vl["STEERING_EPS_DATA"]['STEER_RATEDEG'])
       else:
-        ret.steeringRateDeg = -(cp.vl["STEERING_EPS_DATA"]['STEER_ANGLERATE'])
+        ret.steeringRateDeg = -(cp.vl["STEERING_EPS_DATA"]['STEER_RATEDEG'])
     else:
       ret.steeringRateDeg = cp.vl["STEER_ANGLE_SENSOR"]['STEER_RATE']
 
