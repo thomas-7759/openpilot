@@ -96,7 +96,8 @@ class CarState(CarStateBase):
       # sig_name, sig_address, default
       ("STEER_TORQUE_DRIVER", "STEER_TORQUE_SENSOR", 0),
       ("STEERING_TORQUE", "STEERING_STATUS", 0),
-      ("STEER_ANGLE", "STEER_TORQUE_SENSOR", 0),
+      ("STEERING_ANGLE", "STEER_TORQUE_SENSOR", 0),
+      ("STEER_ANGLE", "STEERING_COMMAND", 0)
     ]
 
     checks = []
