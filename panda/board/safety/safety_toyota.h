@@ -32,11 +32,11 @@ const int TOYOTA_GAS_INTERCEPTOR_THRSLD = 845;
 const CanMsg TOYOTA_TX_MSGS[] = {{0x22E, 2, 5}, {0x164, 0,  8}};  // stepperservocan on bus 3 and civic cruise setting
 
 AddrCheckStruct toyota_rx_checks[] = {
-  {.msg = {{0x158, 0, 8, .check_checksum = false, .expected_timestep = 10000U}}},
-  {.msg = {{0x17C, 0, 8, .check_checksum = false, .expected_timestep = 10000U}}},
-  {.msg = {{0x1D0, 0, 8, .check_checksum = false, .expected_timestep = 30000U}}},
-  {.msg = {{0x224, 0, 8, .check_checksum = false, .expected_timestep = 25000U},
-           {0x309, 0, 8, .check_checksum = false, .expected_timestep = 25000U}}},
+  {.msg = {{0x18E, 0, 8, .check_checksum = false, .expected_timestep = 10000U}}}, // 18e is 398, steering eps data
+  {.msg = {{0x17C, 0, 8, .check_checksum = false, .expected_timestep = 10000U}}}, // 17c is 380, powertrain data
+  {.msg = {{0x1D0, 0, 8, .check_checksum = false, .expected_timestep = 30000U}}}, // 1d0 is 464, wheel speeds
+  {.msg = {{0x224, 0, 8, .check_checksum = false, .expected_timestep = 25000U}, // idk
+           {0x309, 0, 8, .check_checksum = false, .expected_timestep = 25000U}}}, // 309 is 777, car speed
 };
 const int TOYOTA_RX_CHECKS_LEN = sizeof(toyota_rx_checks) / sizeof(toyota_rx_checks[0]);
 
