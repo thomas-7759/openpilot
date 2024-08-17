@@ -33,26 +33,6 @@ class CarState(CarStateBase):
 
     ret.standstill = ret.vEgoRaw < 0.01    #Changed this from 0.001 to 0.1 to 0.01 bc longcontrol.py uses this to detect when car is stopped
 
-    # Some newer models have a more accurate angle measurement in the TORQUE_SENSOR message. Use if non-zero
-#    if abs(cp.vl["STEER_TORQUE_SENSOR"]['STEER_ANGLE']) > 1e-3:
-#      self.accurate_steer_angle_seen = True
-#
-#    if self.accurate_steer_angle_seen:
-#      if self.CP.hasZss:
-#        ret.steeringAngleDeg = cp.vl["SECONDARY_STEER_ANGLE"]['ZORRO_STEER'] - self.angle_offset
-#      else:
-#        ret.steeringAngleDeg = cp.vl["STEER_TORQUE_SENSOR"]['STEER_ANGLE'] - self.angle_offset
-#
-#      if self.needs_angle_offset:
-#        angle_wheel = cp.vl["STEER_ANGLE_SENSOR"]['STEER_ANGLE'] + cp.vl["STEER_ANGLE_SENSOR"]['STEER_FRACTION']
-#        if abs(angle_wheel) > 1e-3:
-#          self.needs_angle_offset = False
-#          self.angle_offset = ret.steeringAngleDeg - angle_wheel
-#    else:
-#      ret.steeringAngleDeg = -(cp.vl["STEER_ANGLE_SENSOR"]['STEER_ANGLE'] + cp.vl["STEER_ANGLE_SENSOR"]['STEER_FRACTION'])
-#
-#    ret.steeringRateDeg = cp.vl["STEER_ANGLE_SENSOR"]['STEER_RATE']
-
     if self.CP.carFingerprint == CAR.OLD_CAR: # STILL NEED TO CHECK THIS, AND STEERINGRATE
       ret.steeringAngleDeg = -(cp.vl["STEERING_STATUS"]['STEERING_ANGLE'])
     
@@ -62,30 +42,17 @@ class CarState(CarStateBase):
 
     
     ret.leftBlinker = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER']
-    ret.rightBlinker = cp.vl["IKE_2"]['RIGHT_BLINKER']
+    ret.rightBlinker = cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
 
-    ret.steeringTorque = cp.vl["STEER_TORQUE_SENSOR"]['STEER_TORQUE_DRIVER']
+    ret.steeringTorque = cp.vl["STEERING_STATUS"]['STEERING_TORQUE']
     ret.steeringTorqueEps = cp.vl["STEERING_STATUS"]['STEERING_TORQUE']
     # we could use the override bit from dbc, but it's triggered at too high torque values
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD
     ret.steerWarning = False
 
-    if self.CP.carFingerprint == CAR.LEXUS_IS:
-      ret.cruiseState.available = cp.vl["DSU_CRUISE"]['MAIN_ON'] != 0
-      ret.cruiseState.speed = cp.vl["DSU_CRUISE"]['SET_SPEED'] * CV.KPH_TO_MS
-      self.low_speed_lockout = False
-    else:
-      ret.cruiseState.available = cp.vl["PCM_CRUISE_2"]['MAIN_ON'] != 0
-      ret.cruiseState.speed = cp.vl["PCM_CRUISE_2"]['SET_SPEED'] * CV.KPH_TO_MS
-      self.low_speed_lockout = cp.vl["PCM_CRUISE_2"]['LOW_SPEED_LOCKOUT'] == 2
-    self.pcm_acc_status = cp.vl["PCM_CRUISE"]['CRUISE_STATE']
-
-    ret.cruiseState.enabled = bool(cp.vl["CRUISE_STATUS"]['CRUISE_ON'])
-    ret.cruiseState.nonAdaptive = cp.vl["PCM_CRUISE"]['CRUISE_STATE'] in [1, 2, 3, 4, 5, 6]
     # 2 is standby, 10 is active. TODO: check that everything else is really a faulty state
     self.steer_state = 2 #standby for testing
 
-    ret.epsDisabled = (True if ret.genericToggle == 0 else False)
 
     return ret
 
@@ -94,10 +61,15 @@ class CarState(CarStateBase):
     
     signals = [
       # sig_name, sig_address, default
+      ("STEER_RATEDEG", "STEERING_EPS_DATA", 0),
       ("STEER_TORQUE_DRIVER", "STEER_TORQUE_SENSOR", 0),
-      ("STEERING_TORQUE", "STEERING_STATUS", 0),
-      ("STEERING_ANGLE", "STEER_TORQUE_SENSOR", 0),
-      ("STEER_ANGLE", "STEERING_COMMAND", 0)
+      ("WHEEL_SPEED_FL", "WHEEL_SPEEDS", 0),
+      ("WHEEL_SPEED_FR", "WHEEL_SPEEDS", 0),
+      ("WHEEL_SPEED_RL", "WHEEL_SPEEDS", 0),
+      ("WHEEL_SPEED_RR", "WHEEL_SPEEDS", 0),
+      ("BRAKE_PRESSED", "POWERTRAIN_DATA", 0),
+      ("LEFT_BLINKER", "SCM_FEEDBACK", 0),
+      ("RIGHT_BLINKER", "SCM_FEEDBACK", 0)
     ]
 
     checks = []
@@ -108,13 +80,11 @@ class CarState(CarStateBase):
   def get_cam_can_parser(CP):
 
     signals = [
-      ("FORCE", "PRE_COLLISION", 0),
-      ("PRECOLLISION_ACTIVE", "PRE_COLLISION", 0)
+      ("STEERING_TORQUE", "STEERING_STATUS", 0),
+      ("STEERING_ANGLE", "STEERING_STATUS", 0)
     ]
 
     # use steering message to check if panda is connected to frc
-    checks = [
-      ("STEERING_LKA", 42)
-    ]
+    checks = []
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 2)
