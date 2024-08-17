@@ -11,7 +11,6 @@ class CarState(CarStateBase):
   def __init__(self, CP):
     super().__init__(CP)
     can_define = CANDefine(DBC[CP.carFingerprint]['pt'])
-    self.shifter_values = can_define.dv["AGS_1"]['GEAR_SELECTOR']
 
     # On cars with cp.vl["STEER_TORQUE_SENSOR"]['STEER_ANGLE']
     # the signal is zeroed to where the steering angle is at start.
