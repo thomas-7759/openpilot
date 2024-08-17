@@ -62,7 +62,6 @@ class CarState(CarStateBase):
     signals = [
       # sig_name, sig_address, default
       ("STEER_RATEDEG", "STEERING_EPS_DATA", 0),
-      ("STEER_TORQUE_DRIVER", "STEER_TORQUE_SENSOR", 0),
       ("WHEEL_SPEED_FL", "WHEEL_SPEEDS", 0),
       ("WHEEL_SPEED_FR", "WHEEL_SPEEDS", 0),
       ("WHEEL_SPEED_RL", "WHEEL_SPEEDS", 0),
@@ -72,7 +71,11 @@ class CarState(CarStateBase):
       ("RIGHT_BLINKER", "SCM_FEEDBACK", 0)
     ]
 
-    checks = []
+    checks = [
+      ("WHEEL_SPEEDS", 50),
+      ("POWERTRAIN_DATA", 100),
+      ("STEERING_EPS_DATA", 15)
+    ]
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
 
@@ -85,6 +88,8 @@ class CarState(CarStateBase):
     ]
 
     # use steering message to check if panda is connected to frc
-    checks = []
+    checks = [
+      ("STEERING_STATUS", 100)
+    ]
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 2)
