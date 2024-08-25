@@ -33,11 +33,11 @@ class CarState(CarStateBase):
     ret.standstill = ret.vEgoRaw < 0.01    #Changed this from 0.001 to 0.1 to 0.01 bc longcontrol.py uses this to detect when car is stopped
 
     if self.CP.carFingerprint == CAR.OLD_CAR: # STILL NEED TO CHECK THIS, AND STEERINGRATE
-      ret.steeringAngleDeg = -(cp.vl["STEERING_STATUS"]['STEERING_ANGLE'])
+      ret.steeringAngleDeg = -(cp.vl["STEERING_EPS_DATA"]['STEER_ANGLE'])
     
     if self.CP.carFingerprint == CAR.OLD_CAR: # Steering rate sensor is code differently on CIVIC
-      if cp.vl["STEERING_EPS_DATA"]['STEER_ANGLERATE'] == 0:
-        ret.steeringRateDeg = (cp.vl["STEERING_EPS_DATA"]['STEER_RATEDEG'])
+      if cp.vl["STEERING_EPS_DATA"]['STEER_ANGLE_RATE'] == 0:
+        ret.steeringRateDeg = (cp.vl["STEERING_EPS_DATA"]['STEER_ANGLE_RATE'])
 
     
     ret.leftBlinker = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER']
@@ -60,7 +60,8 @@ class CarState(CarStateBase):
     
     signals = [
       # sig_name, sig_address, default
-      ("STEER_RATEDEG", "STEERING_EPS_DATA", 0),
+      ("STEER_ANGLE", "STEERING_EPS_DATA", 0),
+      ("STEER_ANGLE_RATE", "STEERING_EPS_DATA", 0),
       ("WHEEL_SPEED_FL", "WHEEL_SPEEDS", 0),
       ("WHEEL_SPEED_FR", "WHEEL_SPEEDS", 0),
       ("WHEEL_SPEED_RL", "WHEEL_SPEEDS", 0),
@@ -73,22 +74,22 @@ class CarState(CarStateBase):
     checks = [
       ("WHEEL_SPEEDS", 50),
       ("POWERTRAIN_DATA", 100),
-      ("STEERING_EPS_DATA", 15)
+      ("STEERING_EPS_DATA", 100)
     ]
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
 
-  @staticmethod
-  def get_cam_can_parser(CP):
-
-    signals = [
-      ("STEERING_TORQUE", "STEERING_STATUS", 0),
-      ("STEERING_ANGLE", "STEERING_STATUS", 0)
-    ]
-
+  #@staticmethod
+  #def get_cam_can_parser(CP):
+#
+#    signals = [
+#      ("STEERING_TORQUE", "STEERING_STATUS", 0),
+#      ("STEERING_ANGLE", "STEERING_STATUS", 0)
+#    ]
+#
     # use steering message to check if panda is connected to frc
-    checks = [
-      ("STEERING_STATUS", 100)
-    ]
-
-    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 2)
+#    checks = [
+#      ("STEERING_STATUS", 100)
+#    ]
+#
+#    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 2)
