@@ -68,7 +68,8 @@ class CarState(CarStateBase):
       ("WHEEL_SPEED_RR", "WHEEL_SPEEDS", 0),
       ("BRAKE_PRESSED", "POWERTRAIN_DATA", 0),
       ("LEFT_BLINKER", "SCM_FEEDBACK", 0),
-      ("RIGHT_BLINKER", "SCM_FEEDBACK", 0)
+      ("RIGHT_BLINKER", "SCM_FEEDBACK", 0),
+      ("STEERING_TORQUE", "STEERING_STATUS", 0)
     ]
 
     checks = [
