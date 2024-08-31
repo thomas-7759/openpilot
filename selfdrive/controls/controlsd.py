@@ -282,7 +282,7 @@ class Controls:
       and self.CP.openpilotLongitudinalControl and CS.vEgo < 0.3 and not self.last_model_long:
       self.events.add(EventName.noTarget)
 
-    self.add_stock_additions_alerts(CS)
+    #self.add_stock_additions_alerts(CS)
 
     # vision-only fcw, can be disabled if radar is present
     if self.sm.updated['radarState']:
