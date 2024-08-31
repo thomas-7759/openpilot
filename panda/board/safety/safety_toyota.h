@@ -29,7 +29,7 @@ const int TOYOTA_STANDSTILL_THRSLD = 32;  // 1kph
 const int TOYOTA_GAS_INTERCEPTOR_THRSLD = 845;
 #define TOYOTA_GET_INTERCEPTOR(msg) (((GET_BYTE((msg), 0) << 8) + GET_BYTE((msg), 1) + (GET_BYTE((msg), 2) << 8) + GET_BYTE((msg), 3)) / 2) // avg between 2 tracks
 
-const CanMsg TOYOTA_TX_MSGS[] = {{0x22E, 2, 5}, {0x164, 0,  8}};  // stepperservocan on bus 3 and civic cruise setting
+const CanMsg TOYOTA_TX_MSGS[] = {{0x22E, 0, 5}, {0x164, 0,  8}};  // stepperservocan on bus 1 and civic cruise setting
 
 AddrCheckStruct toyota_rx_checks[] = {
   {.msg = {{0x156, 0, 6, .check_checksum = false, .expected_timestep = 10000U}}}, // 156 is 342, steering eps data
