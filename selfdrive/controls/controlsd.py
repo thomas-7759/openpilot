@@ -345,7 +345,6 @@ class Controls:
     CS = self.CI.update(self.CC, can_strs)
 
     self.sm.update(0)
-    self.sm_smiskol.update(0)
 
     # Check for CAN timeout
     if not can_strs:
@@ -469,8 +468,6 @@ class Controls:
     a_acc_sol = long_plan.aStart + (dt / LON_MPC_STEP) * (long_plan.aTarget - long_plan.aStart)
     v_acc_sol = long_plan.vStart + dt * (a_acc_sol + long_plan.aStart) / 2.0
 
-    extras_loc = {'lead_one': self.sm_smiskol['radarState'].leadOne, 'mpc_TR': self.sm_smiskol['dynamicFollowData'].mpcTR,
-                  'live_tracks': self.sm_smiskol['liveTracks'], 'has_lead': long_plan.hasLead}
 
     # Gas/Brake PID loop
     actuators.gas, actuators.brake = self.LoC.update(self.active, CS, v_acc_sol, long_plan.vTargetFuture, a_acc_sol, self.CP, extras_loc)
@@ -550,7 +547,6 @@ class Controls:
     alerts = self.events.create_alerts(self.current_alert_types, [self.CP, self.sm, self.is_metric])
     self.AM.add_many(self.sm.frame, alerts, self.enabled)
 
-    self.last_model_long = self.sm_smiskol['modelLongButton'].enabled
 
     self.AM.process_alerts(self.sm.frame, clear_event)
     CC.hudControl.visualAlert = self.AM.visual_alert
