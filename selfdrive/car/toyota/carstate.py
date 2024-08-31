@@ -40,8 +40,8 @@ class CarState(CarStateBase):
         ret.steeringRateDeg = (cp.vl["STEERING_EPS_DATA"]['STEER_ANGLE_RATE'])
 
     
-    ret.leftBlinker = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER']
-    ret.rightBlinker = cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
+    #ret.leftBlinker = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER']
+    #ret.rightBlinker = cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
 
     ret.steeringTorque = cp.vl["STEERING_STATUS"]['STEERING_TORQUE']
     ret.steeringTorqueEps = cp.vl["STEERING_STATUS"]['STEERING_TORQUE']
