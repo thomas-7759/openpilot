@@ -35,21 +35,6 @@ def calc_checksum_8bit(work_data, msg_id): # 0xb8 0x1a0 0x19e 0xaa 0xbf
   checksum &= 0xFF #throw away anything in upper Byte
   return checksum
 
-def create_accel_command(packer, accel, pcm_cancel, standstill_req, lead):
-  # TODO: find the exact canceling bit that does not create a chime
-  values = {
-    "ACCEL_CMD": accel,
-    "SET_ME_X01": 1,
-    "DISTANCE": 0,
-    "MINI_CAR": lead,
-    "SET_ME_X3": 3,
-    "SET_ME_1": 1,
-    # "PERMIT_BRAKING": 1, #This was 082 version, added ""SET_ME_1": 1" because I think this is in my DBC? Did not check, maydbe gives problems?
-    "RELEASE_STANDSTILL": not standstill_req,
-    "CANCEL_REQ": pcm_cancel,
-  }
-  return packer.make_can_msg("ACC_CONTROL", 0, values)
-
 def create_lead_command(packer, lead_rel_speed, lead_acceleration, lead_long_dist):
   values = {
     "LEAD_ACCELERATION": lead_acceleration,
@@ -57,19 +42,6 @@ def create_lead_command(packer, lead_rel_speed, lead_acceleration, lead_long_dis
     "LEAD_LONG_DIST": lead_long_dist,
   }
   return packer.make_can_msg("LEAD_INFO", 0, values)
-
-
-def create_acc_cancel_command(packer):
-  values = {
-    "GAS_RELEASED": 0,
-    "CRUISE_ACTIVE": 0,
-    "STANDSTILL_ON": 0,
-    "ACCEL_NET": 0,
-    "CRUISE_STATE": 0,
-    "CANCEL_REQ": 1,
-  }
-  return packer.make_can_msg("PCM_CRUISE", 0, values)
-
 
 def create_fcw_command(packer, fcw):
   values = {
