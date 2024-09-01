@@ -34,24 +34,6 @@ def calc_checksum_8bit(work_data, msg_id): # 0xb8 0x1a0 0x19e 0xaa 0xbf
   checksum = (checksum & 0xFF) + (checksum >> 8); #add upper and lower Bytes
   checksum &= 0xFF #throw away anything in upper Byte
   return checksum
-  
-def create_lta_steer_command(packer, steer, steer_req, raw_cnt):
-  """Creates a CAN message for the Toyota LTA Steer Command."""
-
-  values = {
-    "COUNTER": raw_cnt + 128,
-    "SETME_X1": 1,
-    "SETME_X3": 3,
-    "PERCENTAGE": 100,
-    "SETME_X64": 0x64,
-    "ANGLE": 0,  # Rate limit? Lower values seeem to work better, but needs more testing
-    "STEER_ANGLE_CMD": steer,
-    "STEER_REQUEST": steer_req,
-    "STEER_REQUEST_2": steer_req,
-    "BIT": 0,
-  }
-  return packer.make_can_msg("STEERING_LTA", 0, values)
-
 
 def create_accel_command(packer, accel, pcm_cancel, standstill_req, lead):
   # TODO: find the exact canceling bit that does not create a chime
