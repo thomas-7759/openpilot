@@ -278,9 +278,9 @@ class Controls:
         self.events.add(EventName.processNotRunning)
 
     # Only allow engagement with brake pressed when stopped behind another stopped car
-    if CS.brakePressed and self.sm['longitudinalPlan'].vTargetFuture >= STARTING_TARGET_SPEED \
-      and self.CP.openpilotLongitudinalControl and CS.vEgo < 0.3 and not self.last_model_long:
-      self.events.add(EventName.noTarget)
+    #if CS.brakePressed and self.sm['longitudinalPlan'].vTargetFuture >= STARTING_TARGET_SPEED \
+      #and self.CP.openpilotLongitudinalControl and CS.vEgo < 0.3 and not self._long:
+      #self.events.add(EventName.noTarget)
 
     #self.add_stock_additions_alerts(CS)
 
@@ -298,9 +298,9 @@ class Controls:
     #self.AM.SA_set_frame(self.sm.frame)
     #self.AM.SA_set_enabled(self.enabled)
     # alert priority is defined by code location, keeping is highest, then lane speed alert, then auto-df alert
-    #if self.sm_smiskol['modelLongButton'].enabled != self.last_model_long:
-      #extra_text_1 = 'disabled!' if self.last_model_long else 'enabled!'
-      #extra_text_2 = '' if self.last_model_long else ', model may behave unexpectedly'
+    #if self.sm_smiskol['modelLongButton'].enabled != self._long:
+      #extra_text_1 = 'disabled!' if self._long else 'enabled!'
+      #extra_text_2 = '' if self._long else ', model may behave unexpectedly'
       #self.AM.SA_add('modelLongAlert', extra_text_1=extra_text_1, extra_text_2=extra_text_2)
       #return
 
