@@ -70,7 +70,7 @@ class CarState(CarStateBase):
       ("BRAKE_PRESSED", "POWERTRAIN_DATA", 0),
       ("LEFT_BLINKER", "SCM_FEEDBACK", 0),
       ("RIGHT_BLINKER", "SCM_FEEDBACK", 0)
-      #("STEERING_TORQUE", "STEERING_STATUS", 0)
+      ("STEERING_TORQUE", "STEERING_STATUS", 0)
     ]
 
     checks = [
@@ -85,14 +85,14 @@ class CarState(CarStateBase):
   def get_cam_can_parser(CP):
     signals = [
       # signal name, message name, default value
-      ("STEERING_ANGLE", "STEERING_STATUS", 0),
-      ("STEERING_TORQUE", "STEERING_STATUS", 0),
-      ("STEERING_SPEED", "STEERING_STATUS", 0),
-      ("CONTROL_STATUS", "STEERING_STATUS", 0),
-      ("TEMPERATURE", "STEERING_STATUS", 0)
+      #("STEERING_ANGLE", "STEERING_STATUS", 0),
+      #("STEERING_TORQUE", "STEERING_STATUS", 0),
+      #("STEERING_SPEED", "STEERING_STATUS", 0),
+      #("CONTROL_STATUS", "STEERING_STATUS", 0),
+      #("TEMPERATURE", "STEERING_STATUS", 0)
     ]
     checks = [
       # refresh frequency Hz
-      ("STEERING_STATUS", 100),
+      #("STEERING_STATUS", 100),
     ] 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 2)  # 2: Actuator-CAN
