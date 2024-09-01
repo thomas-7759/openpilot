@@ -286,18 +286,7 @@ class CarController():
       lead = lead or CS.out.vEgo < 12.    # at low speed we always assume the lead is present do ACC can be engaged
 
       # Lexus IS uses a different cancellation message
-      if pcm_cancel_cmd and CS.CP.carFingerprint == CAR.LEXUS_IS:
-        can_sends.append(create_acc_cancel_command(self.packer))
-      elif CS.CP.openpilotLongitudinalControl:
-        can_sends.append(create_accel_command(self.packer, apply_accel, pcm_cancel_cmd, self.standstill_req, lead))
-      else:
-        #can_sends.append(create_accel_command(self.packer, 0, pcm_cancel_cmd, False, lead))   # Original value
-        can_sends.append(create_accel_command(self.packer, 500, pcm_cancel_cmd, False, lead))
 
-    if (frame % 2 == 0) and (CS.CP.enableGasInterceptor):
-      # send exactly zero if apply_gas is zero. Interceptor will send the max between read value and apply_gas.
-      # This prevents unexpected pedal range rescaling
-      can_sends.append(create_gas_command(self.packer, apply_gas, frame//2))
 
     # ui mesg is at 100Hz but we send asap if:
     # - there is something to display
@@ -314,11 +303,6 @@ class CarController():
       # forcing the pcm to disengage causes a bad fault sound so play a good sound instead
       send_ui = True
 
-    if (frame % 100 == 0 or send_ui) and Ecu.fwdCamera in self.fake_ecus:
-      can_sends.append(create_ui_command(self.packer, steer_alert, pcm_cancel_cmd, left_line, right_line, left_lane_depart, right_lane_depart))
-
-    if frame % 100 == 0 and Ecu.dsu in self.fake_ecus:
-      can_sends.append(create_fcw_command(self.packer, fcw_alert))
 
     #*** static msgs ***
 
