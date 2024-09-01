@@ -2,7 +2,7 @@ from cereal import car
 from common.numpy_fast import clip, interp
 from selfdrive.car import apply_toyota_steer_torque_limits, create_gas_command, make_can_msg
 from selfdrive.car.toyota.toyotacan import create_steer_command, create_ui_command, \
-                                           create_fcw_command, create_lead_command, create_new_steer_command
+                                           create_fcw_command, create_new_steer_command
 from selfdrive.car.toyota.values import Ecu, CAR, STATIC_MSGS, NO_STOP_TIMER_CAR, TSS2_CAR, CarControllerParams, MIN_ACC_SPEED, SteerLimitParams
 from opendbc.can.packer import CANPacker
 from common.op_params import opParams
@@ -86,9 +86,6 @@ class CarController():
 
     self.packer = CANPacker(dbc_name)
 
-    self.lead_v = 100
-    self.lead_a = 0
-    self.lead_d = 250
     self.sm = messaging.SubMaster(['radarState', 'controlsState'])
     #self.sm = messaging.SubMaster(['radarState'])
     
@@ -101,10 +98,6 @@ class CarController():
 
     # *** compute control surfaces ***
     self.sm.update(0)
-    if self.sm.updated['radarState']:
-      self.lead_v = self.sm['radarState'].leadOne.vRel
-      self.lead_a = self.sm['radarState'].leadOne.aRel
-      self.lead_d = self.sm['radarState'].leadOne.dRel
     if self.sm.updated['controlsState']:
       self.LCS = self.sm['controlsState'].longControlState
       if frame % 500 == 0:    # *** 5 sec interval? ***
