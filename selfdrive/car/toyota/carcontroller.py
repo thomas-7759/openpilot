@@ -1,8 +1,7 @@
 from cereal import car
 from common.numpy_fast import clip, interp
 from selfdrive.car import apply_toyota_steer_torque_limits, create_gas_command, make_can_msg
-from selfdrive.car.toyota.toyotacan import create_steer_command, \
-                                           create_fcw_command, create_new_steer_command
+from selfdrive.car.toyota.toyotacan import create_fcw_command, create_new_steer_command
 from selfdrive.car.toyota.values import Ecu, CAR, STATIC_MSGS, NO_STOP_TIMER_CAR, TSS2_CAR, CarControllerParams, MIN_ACC_SPEED, SteerLimitParams
 from opendbc.can.packer import CANPacker
 from common.op_params import opParams
@@ -257,8 +256,6 @@ class CarController():
     # sending it at 100Hz seem to allow a higher rate limit, as the rate limit seems imposed
     # on consecutive messages
     if Ecu.fwdCamera in self.fake_ecus:
-      # Original steer_command
-      can_sends.append(create_steer_command(self.packer, apply_steer, apply_steer_req, frame))
       # # StepperServoCan steer_command
       can_sends.append(create_new_steer_command(self.packer, apply_steer_req, self.target_angle_delta, self.steer_tq_r, frame))
 
