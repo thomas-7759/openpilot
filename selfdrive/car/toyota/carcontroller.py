@@ -167,9 +167,9 @@ class CarController():
     # on entering standstill, send standstill request
     if CS.out.standstill and not self.last_standstill and CS.CP.carFingerprint not in NO_STOP_TIMER_CAR and not self.standstill_hack:
       self.standstill_req = True
-    if CS.pcm_acc_status != 8:
+    #if CS.pcm_acc_status != 8:
       # pcm entered standstill or it's disabled
-      self.standstill_req = False
+      #self.standstill_req = False
 
     self.last_steer = apply_steer
     self.last_accel = apply_accel
